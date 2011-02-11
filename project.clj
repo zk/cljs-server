@@ -1,5 +1,5 @@
 (defproject cljs-server "1.0.0-SNAPSHOT"
-  :description "FIXME: write"
+  :description "A live-coding site for cljs."
   :dependencies [[org.clojure/clojure "1.2.0"]
                  [org.clojure/clojure-contrib "1.2.0"]
                  [ring "0.3.3"]
