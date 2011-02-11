@@ -65,17 +65,8 @@
     (util/append container right-el)
     (util/append container ($html [:div {:style "clear: both"}]))
     (.resize container #(size-h-split-pane container left-el left right-el))
-    (on-insert container #(size-v-split-pane container top-el bottom-el top))
+    (on-insert container #(size-h-split-pane container left-el left right-el))
     container))
-
-(defn size-v-split-pane [container top-el bottom-el]
-  (when (and container top-el bottom-el)
-    (let [w (.outerWidth container)
-          h (.outerHeight container)
-          top-height (or (+ (.height top-el)) 100)
-          bottom-height (- h top-height)]
-      (.css top-el {:height top-height})
-      (.css bottom-el {:height bottom-height}))))
 
 (defn on-insert [el f]
   (.bind el "DOMNodeInserted"
@@ -83,8 +74,53 @@
            (when (aget (.parents el "body") 0)
              (f)))))
 
-(defn v-split-pane [top bottom]
-  (let [container (doto ($html [:div {:class "v-split-pane"}])
+
+(defn size-v-split-pane [container top-el bottom-el opts]
+  (when (and container top-el bottom-el)
+    (let [w (.outerWidth container)
+          h (.outerHeight container)
+          top-height (or (+ (.height top-el))
+                         200)
+          bottom-height (- h top-height (:splitter-height opts))]
+      (.css top-el {:height top-height})
+      (.css bottom-el {:height bottom-height}))))
+
+
+(defn h-splitter [container top-el bottom-el opts]
+  (let [el (.css ($html [:div {:class "h-splitter"}])
+                 {:height (or (:splitter-height opts) 10)})
+        dragging false
+        last-y 0
+        body ($ "body")
+        shim (.css ($html [:div])
+                   {:zIndex 9999
+                    :width (.width body)
+                    :height (.height body)
+                    :backgroundColor "transparent"
+                    :position "fixed"
+                    :top 0
+                    :left 0})]
+    (.mousedown el (fn [e]
+                     (set! dragging true)
+                     (set! last-y e.clientY)
+                     (.append body shim)))
+    (.mousemove ($ "body") (fn [e]
+                             (if dragging
+                               (let [delta (- e.clientY last-y)]
+                                 (set! last-y e.clientY)
+                                 (.height top-el (+ (.height top-el)
+                                                    delta))
+                                 (.height bottom-el (- (.height bottom-el)
+                                                       delta))))))
+    (.mouseup ($ "body") (fn []
+                           (set! dragging false)
+                           (.remove shim)))
+    el))
+
+(defn v-split-pane [top bottom o]
+  (let [opts (if o o {:splitter false
+                      :splitter-height 0})
+        container (doto ($html [:div {:class "v-split-pane"}])
                     (.css {:width "100%"
                            :height "100%"}))
         top-el ($html [:div {:class "top-pane"}
@@ -93,9 +129,10 @@
                           (:el bottom)])]
     (.empty container)
     (util/append container top-el)
-    (h-splitter)
+    (if (:splitter opts)
+      (util/append container (h-splitter container top-el bottom-el opts)))
     (util/append container bottom-el)
-    (.resize container #(size-v-split-pane container top-el bottom-el top))
-    (on-insert container #(size-v-split-pane container top-el bottom-el top))
+    (.resize container #(size-v-split-pane container top-el bottom-el opts))
+    (on-insert container #(size-v-split-pane container top-el bottom-el opts))
     container))
 

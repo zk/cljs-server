@@ -1,7 +1,6 @@
 (ns html
   (:require $ util))
 
-
 (defn parse-attrs [args]
   (cond
    (instanceof (nth args 1) 'jQuery) {}

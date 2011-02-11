@@ -15,7 +15,8 @@
                          session)
         [ring.util.response]
         [ring.middleware.session.memory])
-  (:require [somnium.congomongo :as mongo]))
+  (:require [somnium.congomongo :as mongo]
+            [cljs.core2 :as cljs]))
 
 ;; Middleware
 
@@ -42,14 +43,31 @@
                  [:html
                   [:head
                    [:title "cljs-pad"]
+                   (include-css :html5reset :app)
                    (include-js :jquery-1.4.2.min
                                :underscore.min
                                :jquery.ba-resize.min
                                "codemirror/codemirror.js"
                                "codemirror/mirrorframe.js"
                                :app)
-                   (include-css :html5reset :app)
-                   [:body]]])))))
+                   [:body]]])))
+   ["compile"] (fn [req]
+                 (render :text (->> (:cljs-code (:params req))
+                                    (cljs/compile-cljs-string))))
+   ["render"] (fn [req]
+                (try
+                  (let [cljs-code (:cljs-code (:params req))
+                        js (when cljs-code (cljs/compile-cljs-string cljs-code))
+                        html (html (doctype :html5)
+                                   [:html {:style "width: 100%; height: 100%;"}
+                                    [:head
+                                     (include-js :jquery-1.4.2.min :underscore.min :processing.min :stdlib)
+                                     [:script {:type "text/javascript"}
+                                      js]]
+                                    [:body {:style "width: 100%; height: 100%; overflow: hidden; margin: 0px; padding: 0px;"}]])]
+                    (render :text html))
+                  (catch Exception e
+                    (render :text (html [:h3 (.getMessage e)])))))))
 
 
 (mongo/mongo! :db "ojebook")
