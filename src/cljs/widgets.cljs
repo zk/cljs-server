@@ -41,31 +41,90 @@
 (defn h-splitter []
   ($html [:div {:class "h-splitter"}]))
 
-(defn size-h-split-pane [container left-el left-opts right-el]
+(defn percent? [s]
+  (and (string? s)
+       (> (.indexOf s "%") -1)))
+
+(defn parse-percent [s]
+  (-> s
+      (.replace "%" "")
+      ('parseFloat)
+      (/ 100)))
+
+(defn size-h-split-pane [container left-el right-el opts]
   (let [w (.width container)
         h (.height container)
-        left-width (or (:width left-opts) 200)]
+        split-pos (:pos (:splitter opts))
+        split-width (:size (:splitter opts))
+        left-width (cond
+                    (percent? split-pos) (* w (parse-percent split-pos))
+                    :else (or (:pos (:splitter opts)) 200))]
     (.css left-el {:height h
-                   :width left-width})
+                   :width (- left-width
+                             split-width)})
     (.css right-el {:height h
                     :width (- w left-width)})))
 
-(defn h-split-pane [left right]
-  (let [container (doto ($html [:div {:class "h-split-pane"}])
+(defn v-splitter [container left-el right-el opts]
+  (let [el (.css ($html [:div {:class "v-splitter"}])
+                 {:width (or (:size opts) 10)
+                  :height (.height container)
+                  :float "left"})
+        dragging false
+        last-x 0
+        body ($ "body")
+        shim (.css ($html [:div])
+                   {:zIndex 9999
+                    :width (.width body)
+                    :height (.height body)
+                    :backgroundColor "transparent"
+                    :position "fixed"
+                    :top 0
+                    :left 0})]
+    (.mousedown el (fn [e]
+                     (set! dragging true)
+                     (set! last-x e.clientX)
+                     (.append body shim)))
+    (.mousemove ($ "body") (fn [e]
+                             (if dragging
+                               (let [delta (- e.clientX last-x)]
+                                 (set! last-x e.clientX)
+                                 (.width left-el (+ (.width left-el)
+                                                     delta))
+                                 (.width right-el (- (.width right-el)
+                                                      delta))))))
+    (.mouseup ($ "body") (fn []
+                           (set! dragging false)
+                           (.remove shim)))
+    el))
+
+(defn h-split-pane [o]
+  (let [split-opts (merge {:pos 200
+                           :size 10
+                           :dynamic false}
+                          (:splitter o))
+        opts (merge {:splitter split-opts}
+                    o)
+        container (doto ($html [:div {:class "h-split-pane"}])
                     (.css {:width "100%"
                            :height "100%"}))
         left-el ($html [:div {:class "left-pane" :style "float: left; width: 100%; height: 100%;"}
-                        (.css (:el left) {:width "100%"
-                                          :height "100%"})])
+                        (.css (:left opts) {:width "100%"
+                                            :height "100%"})])
         right-el ($html [:div {:class "right-pane" :style "float: left;"}
-                         (.css (:el right) {:width "100%"
-                                            :height "100%"})])]
-    (.empty container)
+                         (.css (:right opts) {:width "100%"
+                                              :height "100%"})])
+        splitter (v-splitter container left-el right-el (:splitter opts))]
     (util/append container left-el)
+    (when (:dynamic (:splitter opts))
+      (util/append container splitter))
     (util/append container right-el)
     (util/append container ($html [:div {:style "clear: both"}]))
-    (.resize container #(size-h-split-pane container left-el left right-el))
-    (on-insert container #(size-h-split-pane container left-el left right-el))
+    (.resize ($ 'window) #(size-h-split-pane container left-el  right-el opts))
+    
+    (.resize ($ 'window) #(.height splitter (.height container)))
+    (on-insert container #(.height splitter (.height container)))
+    (on-insert container #(size-h-split-pane container left-el  right-el opts))
     container))
 
 (defn on-insert [el f]
@@ -127,7 +186,6 @@
                        (:el top)])
         bottom-el ($html [:div {:class "bottom-pane"}
                           (:el bottom)])]
-    (.empty container)
     (util/append container top-el)
     (if (:splitter opts)
       (util/append container (h-splitter container top-el bottom-el opts)))

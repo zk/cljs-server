@@ -2,7 +2,8 @@
   (:use util html)
   (:require [widgets :as wd]
             CodeMirror
-            MirrorFrame))
+            MirrorFrame
+            examples))
 
 (defn control-panel []
   ($html [:div {:class "hello world"}
@@ -27,44 +28,13 @@
                               :value (.getCode cljs-ed)}]])]
     (.submit form)))
 
-(def initial-content
-  "(ns cljspad
-    (:use util))
+(def cljs-editor 'null)
 
-  (def elem (doto (.createElement 'document \"canvas\")
-              (aset :width 500)
-              (aset :height 500)))
-
-  (def ctx (.getContext elem \"2d\"))
-
-  (defn next-step [pos dir]
-    (fn []
-      (.rotate ctx 15)
-      (set! ctx.fillStyle \"rgba(0,0,0,0.05)\")
-      (.fillRect ctx 0 0 elem.width elem.height)
-
-      (set! ctx.fillStyle \"rgba(255,0,0,1)\")
-      (.fillRect ctx pos pos 20 20)
-
-      (let [next-pos (+ pos dir)]
-        (cond
-         (> next-pos elem.width) ('setTimeout (next-step next-pos -1) 10)
-         (< (+ next-pos 20) 0) ('setTimeout (next-step next-pos 1) 10)
-         :else ('setTimeout (next-step next-pos dir) 10)))))
-
-  (ready
-   #(do
-      (.appendChild 'document.body elem)
-      (.fillRect ctx 0 0 elem.width elem.height)
-      ('setTimeout
-       (next-step 0 1)
-       10)))
-
-;; Adapted from http://ejohn.org/apps/spiral/canvas.html
-
-"
-  )
-;; END INITIAL CONTENT
+(defn seed-link [link-text code]
+  (doto ($html [:a {:href "#"} link-text])
+    (.click (fn []
+              (.setCode cljs-editor code)
+              false))))
 
 (ready
  (fn []
@@ -73,21 +43,50 @@
                   [:h1 "CljsPad"]])
          content ($html [:div {:style "height: 100%;"}
                          (wd/h-split-pane
-                                {:el ($html [:div {:class "cljs-editor-wrapper"}
-                                             [:textarea {:id "cljs-editor"
-                                                         :style ""}]])
-                                 :width 600}
-                                {:el (wd/v-split-pane
-                                      {:el ($html [:div {:class "compiled-cljs-output"}
-                                                   [:textarea {:id "js-editor"
-                                                               :style ""}]])
-                                       :height 400}
-                                      {:el ($html [:iframe {:id "render-iframe"
-                                                            :name "render-iframe"
-                                                            :src "/render"
-                                                            :style "height: 99.9%; width: 99.9%; margin: 0px; padding: 0px;"}])}
-                                      {:splitter true
-                                       :splitter-height 10})})])]
+                          {:left (.css ($html [:div {:class "left-bar"}
+                                               [:div {:class "left-content"}
+                                                [:p "CljsPad is an live console for the experimental "
+                                                 [:a {:href "http://clojure.org"} "clojure"]
+                                                 "(ish)-to-javscript compiler, "
+                                                 [:a {:href "http://github.com/zkim/cljs"} "cljs"]
+                                                 "."]
+                                                [:br]
+                                                [:p "Place your cursor in the left pane, hit ctrl+s, and the cljs code will be transformed into javscript (top-right panel), executed, and the result displayed in the bottom-right panel."]
+                                                [:br]
+                                                [:h4 "Examples"]
+                                                [:ul
+                                                 [:li
+                                                  (seed-link "empty" examples/empty)]
+                                                 [:li
+                                                  (seed-link "html5 canvas" examples/canvas)]
+                                                 [:li
+                                                  (seed-link "jquery dom" examples/dom)]]
+                                                [:li
+                                                 (seed-link "templating" examples/tpl)]]])
+                                       {:backgroundColor "#eee"
+                                        :borderRight "solid black 1px"
+                                        :zIndex 5000})
+                           :right (wd/h-split-pane
+                                   {:left ($html [:div {:class "cljs-editor-wrapper"}
+                                                  [:textarea {:id "cljs-editor"
+                                                              :style ""}]])
+                                    :right (wd/v-split-pane
+                                            {:el ($html [:div {:class "compiled-cljs-output"}
+                                                         [:textarea {:id "js-editor"
+                                                                     :style ""}]])
+                                             :height 400}
+                                            {:el ($html [:iframe {:id "render-iframe"
+                                                                  :name "render-iframe"
+                                                                  :src "/render"
+                                                                  :style "height: 99.9%; width: 99.9%; margin: 0px; padding: 0px;"}])}
+                                            {:splitter true
+                                             :splitter-height 10})
+                                    :splitter {:pos "50%"
+                                               :size 10
+                                               :dynamic true}})
+                           :splitter {:pos 200
+                                      :size 5
+                                      :dynamic false}})])]
      (util/append ($ "body") (wd/v-split-pane
                               {:el header}
                               {:el content}))
@@ -96,19 +95,14 @@
                                                             :width "100%"
                                                             :parserfile ["parsejavascript.js"
                                                                          "tokenizejavascript.js"]
-                                                            :stylesheet "/css/schemecolors.css"})
-           cljs-editor (.fromTextArea CodeMirror "cljs-editor" {:path "/js/codemirror/"
-                                                                :content initial-content
-                                                                :height "100%"
-                                                                :width "100%"
-                                                                :parserfile ["parsescheme.js"
-                                                                             "tokenizescheme.js"]
-                                                                :stylesheet "/css/schemecolors.css"
-                                                                :saveFunction #(on-save cljs-editor js-output)})
-           ]))))
-
-
-
-
-
+                                                            :stylesheet "/css/jscolors.css"})
+           cljs-ed (.fromTextArea CodeMirror "cljs-editor" {:path "/js/codemirror/"
+                                                            :content examples/canvas
+                                                            :height "100%"
+                                                            :width "100%"
+                                                            :parserfile ["parsescheme.js"
+                                                                         "tokenizescheme.js"]
+                                                            :stylesheet "/css/schemecolors.css"
+                                                            :saveFunction #(on-save cljs-ed js-output)})]
+       (set! cljs-editor cljs-ed)))))
 

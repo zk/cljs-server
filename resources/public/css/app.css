@@ -9,8 +9,13 @@ body {
     overflow: hidden;
 }
 
+li {
+    list-style-type: none;
+}
+
 header {
     height: 100%;
+    z-index: 6000;
 
     border-bottom: solid #555 1px;
 
@@ -21,9 +26,15 @@ background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#70CBE
 
 filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#70CBEF', endColorstr='#00A2E2',GradientType=0 ); /* ie */
 
+}
 
-
-
+.left-content {
+    padding-top: 15px;
+    margin-left: 15px;
+    margin-right: 15px;
+    background-color: #eee;
+    font-size: 10pt;
+    line-height: 14px;
 }
 
 header h1 {
@@ -37,7 +48,13 @@ header h1 {
 
 .h-splitter {
     height: 10px;
-    background-color: black;
+    background-color: #aaa;
+    cursor: row-resize;
+}
+
+.v-splitter {
+    background-color: #aaa;
+    cursor: col-resize;
 }
 
 .compiled-cljs-output {

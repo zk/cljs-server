@@ -21,7 +21,7 @@
   :cljs {:source-path "src/cljs"
          :output-path "resources/public/js"
          :libs [{:name app
-                 :sources [util html widgets app]}
+                 :sources [util html examples widgets app]}
                 {:name stdlib
                  :sources [util html]}]}
   :main main)

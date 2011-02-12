@@ -148,8 +148,8 @@ cljs.core = cljs.core || {};
         }
         return out;
       }).call(this, col, el);
-    }.bind(this)), "", this.filter((function(p1__4795_HASH_){
-      return this._["identity"](p1__4795_HASH_);
+    }.bind(this)), "", this.filter((function(p1__6225_HASH_){
+      return this._["identity"](p1__6225_HASH_);
     }.bind(this)), args));
   }.bind(this));
   
@@ -218,9 +218,9 @@ cljs.core = cljs.core || {};
       var pairs = this.partition(2, rest);
       
       (function() {
-        var G__4797 = pairs;
-        for(var i=0; i < G__4797.length; i++) {
-          (function(p){(obj[this.first(p)] = this.nth(p, 1))}.bind(this))(G__4797[i]);
+        var G__6227 = pairs;
+        for(var i=0; i < G__6227.length; i++) {
+          (function(p){(obj[this.first(p)] = this.nth(p, 1))}.bind(this))(G__6227[i]);
         }
       }.bind(this))();return obj;
     
@@ -230,9 +230,9 @@ cljs.core = cljs.core || {};
   this.conj = (function(col){
     var rest = Array.prototype.slice.call(arguments, 1);
     (function() {
-      var G__4798 = rest;
-      for(var i=0; i < G__4798.length; i++) {
-        (function(r){col["push"](r)}.bind(this))(G__4798[i]);
+      var G__6228 = rest;
+      for(var i=0; i < G__6228.length; i++) {
+        (function(r){col["push"](r)}.bind(this))(G__6228[i]);
       }
     }.bind(this))();
     return col;
@@ -261,8 +261,8 @@ cljs.core = cljs.core || {};
         
       });
       
-      this.map((function(p1__4796_HASH_){
-        return this._["extend"](o,p1__4796_HASH_);
+      this.map((function(p1__6226_HASH_){
+        return this._["extend"](o,p1__6226_HASH_);
       }.bind(this)), objs);return o;
     
     }.bind(this))();
@@ -337,8 +337,8 @@ var html = html || {};
   
   this.parse_body = (function(args){
     return (function(){var out = (function(){if((this.nth(args, 1) instanceof jQuery)){return this.drop(1, args);} else if(this.object_QM_(this.nth(args, 1))){return this.drop(2, args);} else {return this.drop(1, args);}}.bind(this))();;
-    out = this.filter(this._.identity, out);out = this.filter((function(p1__5574_HASH_){
-      return (!(undefined == p1__5574_HASH_));
+    out = this.filter(this._.identity, out);out = this.filter((function(p1__8249_HASH_){
+      return (!(undefined == p1__8249_HASH_));
     }.bind(this)), out);return out;}.bind(this))();
   }.bind(this));
   
@@ -364,6 +364,25 @@ var html = html || {};
   }.bind(this))
 
 }).call(html);
+
+
+
+var examples = examples || {};
+(function() {
+
+  this.Array = Array;
+  
+  for(var prop in cljs.core){ this[prop] = cljs.core[prop] };
+  
+  this.canvas = "(ns cljspad\n    (:use util))\n\n(def elem (doto (.createElement 'document \"canvas\")\n            (aset :width 500)\n            (aset :height 500)))\n\n(def ctx (.getContext elem \"2d\"))\n\n(defn next-step [pos dir]\n  (fn []\n    (.rotate ctx 15)\n    (set! ctx.fillStyle \"rgba(0,0,0,0.05)\")\n    (.fillRect ctx 0 0 elem.width elem.height)\n\n    (set! ctx.fillStyle \"rgba(255,0,0,1)\")\n    (.fillRect ctx pos pos 20 20)\n\n    (let [next-pos (+ pos dir)]\n      (cond\n       (> next-pos elem.width) ('setTimeout (next-step next-pos -1) 10)\n       (< (+ next-pos 20) 0) ('setTimeout (next-step next-pos 1) 10)\n       :else ('setTimeout (next-step next-pos dir) 10)))))\n\n(ready\n #(do\n    (.appendChild 'document.body elem)\n    (.fillRect ctx 0 0 elem.width elem.height)\n    ('setTimeout\n     (next-step 0 1)\n     10)))\n\n;; Adapted from http://ejohn.org/apps/spiral/canvas.html\n\n";;
+  
+  this.empty = "(ns cljspad)\n";;
+  
+  this.dom = "(ns cljspad-dom\n  (:use util html)\n  (:require [jQuery :as $]))\n\n(defn rand []\n  (.random 'Math))\n\n(defn random-color []\n  (str\n   \"rgba(\"\n   (.floor 'Math (* 255 (rand)))\n   \",\"\n   (.floor 'Math (* 255 (rand)))\n   \",\"\n   (.floor 'Math (* 255 (rand)))\n   \",\"\n   (+ (rand) 0.5)\n   \")\"))\n\n(defn move-el [el body]\n  (let [new-x (* (.width body)\n                 (rand))\n        new-y (* (.height body)\n                 (rand))]\n    (println (random-color))\n    (.css el {:background (random-color)})\n    (.animate el {:top new-y\n                  :left new-x})))\n\n(defn make-el [body]\n  (let [el ($html [:div \"mouseover me!\"])]\n    (.css el {:backgroundColor \"red\"\n              :height 100\n              :width 100\n              :margin \"10px\"\n              :position \"absolute\"\n              :color \"white\"\n              :padding \"10px\"})\n    (.mouseover el #(move-el el body))))\n\n(ready\n (fn []\n   (let [body ($ \"body\")]\n     (.css body {:backgroundImage \"url('/images/dombg.jpg')\"})\n     (append body (make-el body)))))\n";;
+  
+  return this.tpl = "(ns cljspad-templating\n  (:use util html))\n\n(defn split [del s]\n  (.split s del))\n\n(ready\n (fn []\n   (append\n    ($ \"body\")\n\n    ($html [:div {:style \"padding: 10px;\"}\n            [:h1 \"Hello World!\"]\n            [:p \"The quick brown fox jumps over the lazy dog.\"]\n            [:ul\n             (->> \"Lorem Ipsum Dolor Sit Amet\"\n                  (split \" \")\n                  (map #($html [:li %])))]]))))";
+
+}).call(examples);
 
 
 
@@ -407,8 +426,8 @@ var widgets = widgets || {};
             'display':"none"
           }))}.bind(this))();
         }.bind(this)),
-        'click':(function(p1__5575_HASH_){
-          return link["click"](p1__5575_HASH_);
+        'click':(function(p1__8250_HASH_){
+          return link["click"](p1__8250_HASH_);
         }.bind(this))
       });
     
@@ -428,8 +447,8 @@ var widgets = widgets || {};
           ({
             'class':"tabs"
           }),
-          this.map((function(p1__5576_HASH_){
-            return (p1__5576_HASH_['title']);
+          this.map((function(p1__8251_HASH_){
+            return (p1__8251_HASH_['title']);
           }.bind(this)), tabs),
           [
             "div",
@@ -449,23 +468,23 @@ var widgets = widgets || {};
           ({
             'class':"tab-content"
           }),
-          this.map((function(p1__5577_HASH_){
-            return (p1__5577_HASH_['content']);
+          this.map((function(p1__8252_HASH_){
+            return (p1__8252_HASH_['content']);
           }.bind(this)), tabs)
         ]
       ]);
       
       (function() {
-        var G__5579 = tabs;
-        for(var i=0; i < G__5579.length; i++) {
+        var G__8254 = tabs;
+        for(var i=0; i < G__8254.length; i++) {
           (function(t){t["click"]((function(){
-            this.map((function(p1__5578_HASH_){
-              return p1__5578_HASH_["blur"]();
+            this.map((function(p1__8253_HASH_){
+              return p1__8253_HASH_["blur"]();
             }.bind(this)), tabs);
             t["focus"]();
             return false;
           }.bind(this)));
-          t["blur"]()}.bind(this))(G__5579[i]);
+          t["blur"]()}.bind(this))(G__8254[i]);
         }
       }.bind(this))();this.first(tabs)["focus"]();return el;
     
@@ -490,15 +509,44 @@ var widgets = widgets || {};
     ]);
   }.bind(this));
   
-  this.size_h_split_pane = (function(container, left_el, left_opts, right_el){
+  this.percent_QM_ = (function(s){
+    return (this.string_QM_(s) && (s["indexOf"]("%") > -1));
+  }.bind(this));
+  
+  this.parse_percent = (function(s){
+    return (function(){var out = s;
+    out = out["replace"]("%","");out = parseFloat(out);out = (function() {
+      var out = arguments[0];
+      for(var __i=1; __i<arguments.length; __i++) {
+        out = out / arguments[__i];
+      }
+      return out;
+    }).call(this, out, 100);return out;}.bind(this))();
+  }.bind(this));
+  
+  this.size_h_split_pane = (function(container, left_el, right_el, opts){
     return (function(){
       var w = container["width"](),
       h = container["height"](),
-      left_width = ((left_opts['width']) || 200);
+      split_pos = ((opts['splitter'])['pos']),
+      split_width = ((opts['splitter'])['size']),
+      left_width = (function(){if(this.percent_QM_(split_pos)){return (function() {
+        var out = arguments[0];
+        for(var __i=1; __i<arguments.length; __i++) {
+          out = out * arguments[__i];
+        }
+        return out;
+      }).call(this, w, this.parse_percent(split_pos));} else {return (((opts['splitter'])['pos']) || 200);}}.bind(this))();;
       
       left_el["css"](({
         'height':h,
-        'width':left_width
+        'width':(function() {
+          var out = arguments[0];
+          for(var __i=1; __i<arguments.length; __i++) {
+            out = out - arguments[__i];
+          }
+          return out;
+        }).call(this, left_width, split_width)
       }));return right_el["css"](({
         'height':h,
         'width':(function() {
@@ -513,9 +561,85 @@ var widgets = widgets || {};
     }.bind(this))();
   }.bind(this));
   
-  this.h_split_pane = (function(left, right){
+  this.v_splitter = (function(container, left_el, right_el, opts){
     return (function(){
-      var container = (function(){var out = this.$html([
+      var el = this.$html([
+        "div",
+        ({
+          'class':"v-splitter"
+        })
+      ])["css"](({
+        'width':((opts['size']) || 10),
+        'height':container["height"](),
+        'float':"left"
+      })),
+      dragging = false,
+      last_x = 0,
+      body = this.$("body"),
+      shim = this.$html([
+        "div"
+      ])["css"](({
+        'zIndex':9999,
+        'width':body["width"](),
+        'height':body["height"](),
+        'backgroundColor':"transparent",
+        'position':"fixed",
+        'top':0,
+        'left':0
+      }));
+      
+      el["mousedown"]((function(e){
+        (dragging = true);
+        (last_x = e.clientX);
+        return body["append"](shim);
+      }.bind(this)));this.$("body")["mousemove"]((function(e){
+        return (function(){
+          if(dragging){
+           return (function(){
+            var delta = (function() {
+              var out = arguments[0];
+              for(var __i=1; __i<arguments.length; __i++) {
+                out = out - arguments[__i];
+              }
+              return out;
+            }).call(this, e.clientX, last_x);
+            
+            (last_x = e.clientX);left_el["width"]((function() {
+              var out = arguments[0];
+              for(var __i=1; __i<arguments.length; __i++) {
+                out = out + arguments[__i];
+              }
+              return out;
+            }).call(this, left_el["width"](), delta));return right_el["width"]((function() {
+              var out = arguments[0];
+              for(var __i=1; __i<arguments.length; __i++) {
+                out = out - arguments[__i];
+              }
+              return out;
+            }).call(this, right_el["width"](), delta));
+          
+          }.bind(this))();
+          }
+        }.bind(this))();
+      }.bind(this)));this.$("body")["mouseup"]((function(){
+        (dragging = false);
+        return shim["remove"]();
+      }.bind(this)));return el;
+    
+    }.bind(this))();
+  }.bind(this));
+  
+  this.h_split_pane = (function(o){
+    return (function(){
+      var split_opts = this.merge(({
+        'pos':200,
+        'size':10,
+        'dynamic':false
+      }), (o['splitter'])),
+      opts = this.merge(({
+        'splitter':split_opts
+      }), o),
+      container = (function(){var out = this.$html([
         "div",
         ({
           'class':"h-split-pane"
@@ -532,7 +656,7 @@ var widgets = widgets || {};
           'class':"left-pane",
           'style':"float: left; width: 100%; height: 100%;"
         }),
-        (left['el'])["css"](({
+        (opts['left'])["css"](({
           'width':"100%",
           'height':"100%"
         }))
@@ -543,21 +667,32 @@ var widgets = widgets || {};
           'class':"right-pane",
           'style':"float: left;"
         }),
-        (right['el'])["css"](({
+        (opts['right'])["css"](({
           'width':"100%",
           'height':"100%"
         }))
-      ]);
+      ]),
+      splitter = this.v_splitter(container, left_el, right_el, (opts['splitter']));
       
-      container["empty"]();this.util.append(container, left_el);this.util.append(container, right_el);this.util.append(container, this.$html([
+      this.util.append(container, left_el);(function(){
+        
+        if(!((opts['splitter'])['dynamic'])) return null;
+        
+        return this.util.append(container, splitter);
+      
+      }.bind(this))();this.util.append(container, right_el);this.util.append(container, this.$html([
         "div",
         ({
           'style':"clear: both"
         })
-      ]));container["resize"]((function(){
-        return this.size_h_split_pane(container, left_el, left, right_el);
+      ]));this.$(window)["resize"]((function(){
+        return this.size_h_split_pane(container, left_el, right_el, opts);
+      }.bind(this)));this.$(window)["resize"]((function(){
+        return splitter["height"](container["height"]());
       }.bind(this)));this.on_insert(container, (function(){
-        return this.size_h_split_pane(container, left_el, left, right_el);
+        return splitter["height"](container["height"]());
+      }.bind(this)));this.on_insert(container, (function(){
+        return this.size_h_split_pane(container, left_el, right_el, opts);
       }.bind(this)));return container;
     
     }.bind(this))();
@@ -713,7 +848,7 @@ var widgets = widgets || {};
         (bottom['el'])
       ]);
       
-      container["empty"]();this.util.append(container, top_el);(function(){
+      this.util.append(container, top_el);(function(){
         if((opts['splitter'])){
          return this.util.append(container, this.h_splitter(container, top_el, bottom_el, opts));
         }
@@ -746,6 +881,8 @@ var app = app || {};
   this.CodeMirror = CodeMirror;
   
   this.MirrorFrame = MirrorFrame;
+  
+  this.examples = examples;
   
   this.control_panel = (function(){
     return this.$html([
@@ -800,7 +937,22 @@ var app = app || {};
     }.bind(this))();
   }.bind(this));
   
-  this.initial_content = "(ns cljspad\n    (:use util))\n\n  (def elem (doto (.createElement 'document \"canvas\")\n              (aset :width 500)\n              (aset :height 500)))\n\n  (def ctx (.getContext elem \"2d\"))\n\n  (defn next-step [pos dir]\n    (fn []\n      (.rotate ctx 15)\n      (set! ctx.fillStyle \"rgba(0,0,0,0.05)\")\n      (.fillRect ctx 0 0 elem.width elem.height)\n\n      (set! ctx.fillStyle \"rgba(255,0,0,1)\")\n      (.fillRect ctx pos pos 20 20)\n\n      (let [next-pos (+ pos dir)]\n        (cond\n         (> next-pos elem.width) ('setTimeout (next-step next-pos -1) 10)\n         (< (+ next-pos 20) 0) ('setTimeout (next-step next-pos 1) 10)\n         :else ('setTimeout (next-step next-pos dir) 10)))))\n\n  (ready\n   #(do\n      (.appendChild 'document.body elem)\n      (.fillRect ctx 0 0 elem.width elem.height)\n      ('setTimeout\n       (next-step 0 1)\n       10)))\n\n;; Adapted from http://ejohn.org/apps/spiral/canvas.html\n\n";;
+  this.cljs_editor = null;;
+  
+  this.seed_link = (function(link_text, code){
+    return (function(){var out = this.$html([
+      "a",
+      ({
+        'href':"#"
+      }),
+      link_text
+    ]);
+    out["click"]((function(){
+      this.cljs_editor["setCode"](code);
+      return false;
+    }.bind(this)));
+    return out}.bind(this)());
+  }.bind(this));
   
   return this.ready((function(){
     return (function(){
@@ -817,50 +969,129 @@ var app = app || {};
           'style':"height: 100%;"
         }),
         this.wd.h_split_pane(({
-          'el':this.$html([
+          'left':this.$html([
             "div",
             ({
-              'class':"cljs-editor-wrapper"
+              'class':"left-bar"
             }),
             [
-              "textarea",
-              ({
-                'id':"cljs-editor",
-                'style':""
-              })
-            ]
-          ]),
-          'width':600
-        }), ({
-          'el':this.wd.v_split_pane(({
-            'el':this.$html([
               "div",
               ({
-                'class':"compiled-cljs-output"
+                'class':"left-content"
+              }),
+              [
+                "p",
+                "CljsPad is an live console for the experimental ",
+                [
+                  "a",
+                  ({
+                    'href':"http://clojure.org"
+                  }),
+                  "clojure"
+                ],
+                "(ish)-to-javscript compiler, ",
+                [
+                  "a",
+                  ({
+                    'href':"http://github.com/zkim/cljs"
+                  }),
+                  "cljs"
+                ],
+                "."
+              ],
+              [
+                "br"
+              ],
+              [
+                "p",
+                "Place your cursor in the left pane, hit ctrl+s, and the cljs code will be transformed into javscript (top-right panel), executed, and the result displayed in the bottom-right panel."
+              ],
+              [
+                "br"
+              ],
+              [
+                "h4",
+                "Examples"
+              ],
+              [
+                "ul",
+                [
+                  "li",
+                  this.seed_link("empty", this.examples.empty)
+                ],
+                [
+                  "li",
+                  this.seed_link("html5 canvas", this.examples.canvas)
+                ],
+                [
+                  "li",
+                  this.seed_link("jquery dom", this.examples.dom)
+                ]
+              ],
+              [
+                "li",
+                this.seed_link("templating", this.examples.tpl)
+              ]
+            ]
+          ])["css"](({
+            'backgroundColor':"#eee",
+            'borderRight':"solid black 1px",
+            'zIndex':5000
+          })),
+          'right':this.wd.h_split_pane(({
+            'left':this.$html([
+              "div",
+              ({
+                'class':"cljs-editor-wrapper"
               }),
               [
                 "textarea",
                 ({
-                  'id':"js-editor",
+                  'id':"cljs-editor",
                   'style':""
                 })
               ]
             ]),
-            'height':400
-          }), ({
-            'el':this.$html([
-              "iframe",
-              ({
-                'id':"render-iframe",
-                'name':"render-iframe",
-                'src':"/render",
-                'style':"height: 99.9%; width: 99.9%; margin: 0px; padding: 0px;"
-              })
-            ])
-          }), ({
-            'splitter':true,
-            'splitter-height':10
-          }))
+            'right':this.wd.v_split_pane(({
+              'el':this.$html([
+                "div",
+                ({
+                  'class':"compiled-cljs-output"
+                }),
+                [
+                  "textarea",
+                  ({
+                    'id':"js-editor",
+                    'style':""
+                  })
+                ]
+              ]),
+              'height':400
+            }), ({
+              'el':this.$html([
+                "iframe",
+                ({
+                  'id':"render-iframe",
+                  'name':"render-iframe",
+                  'src':"/render",
+                  'style':"height: 99.9%; width: 99.9%; margin: 0px; padding: 0px;"
+                })
+              ])
+            }), ({
+              'splitter':true,
+              'splitter-height':10
+            })),
+            'splitter':({
+              'pos':"50%",
+              'size':10,
+              'dynamic':true
+            })
+          })),
+          'splitter':({
+            'pos':200,
+            'size':5,
+            'dynamic':false
+          })
         }))
       ]);
       
@@ -877,11 +1108,11 @@ var app = app || {};
             "parsejavascript.js",
             "tokenizejavascript.js"
           ],
-          'stylesheet':"/css/schemecolors.css"
+          'stylesheet':"/css/jscolors.css"
         })),
-        cljs_editor = this.CodeMirror["fromTextArea"]("cljs-editor",({
+        cljs_ed = this.CodeMirror["fromTextArea"]("cljs-editor",({
           'path':"/js/codemirror/",
-          'content':this.initial_content,
+          'content':this.examples.canvas,
           'height':"100%",
           'width':"100%",
           'parserfile':[
@@ -890,11 +1121,11 @@ var app = app || {};
           ],
           'stylesheet':"/css/schemecolors.css",
           'saveFunction':(function(){
-            return this.on_save(cljs_editor, js_output);
+            return this.on_save(cljs_ed, js_output);
           }.bind(this))
         }));
         
-        return ;
+        return (this.cljs_editor = cljs_ed);
       
       }.bind(this))();
     

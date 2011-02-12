@@ -148,8 +148,8 @@ cljs.core = cljs.core || {};
         }
         return out;
       }).call(this, col, el);
-    }.bind(this)), "", this.filter((function(p1__4795_HASH_){
-      return this._["identity"](p1__4795_HASH_);
+    }.bind(this)), "", this.filter((function(p1__6225_HASH_){
+      return this._["identity"](p1__6225_HASH_);
     }.bind(this)), args));
   }.bind(this));
   
@@ -218,9 +218,9 @@ cljs.core = cljs.core || {};
       var pairs = this.partition(2, rest);
       
       (function() {
-        var G__4797 = pairs;
-        for(var i=0; i < G__4797.length; i++) {
-          (function(p){(obj[this.first(p)] = this.nth(p, 1))}.bind(this))(G__4797[i]);
+        var G__6227 = pairs;
+        for(var i=0; i < G__6227.length; i++) {
+          (function(p){(obj[this.first(p)] = this.nth(p, 1))}.bind(this))(G__6227[i]);
         }
       }.bind(this))();return obj;
     
@@ -230,9 +230,9 @@ cljs.core = cljs.core || {};
   this.conj = (function(col){
     var rest = Array.prototype.slice.call(arguments, 1);
     (function() {
-      var G__4798 = rest;
-      for(var i=0; i < G__4798.length; i++) {
-        (function(r){col["push"](r)}.bind(this))(G__4798[i]);
+      var G__6228 = rest;
+      for(var i=0; i < G__6228.length; i++) {
+        (function(r){col["push"](r)}.bind(this))(G__6228[i]);
       }
     }.bind(this))();
     return col;
@@ -261,8 +261,8 @@ cljs.core = cljs.core || {};
         
       });
       
-      this.map((function(p1__4796_HASH_){
-        return this._["extend"](o,p1__4796_HASH_);
+      this.map((function(p1__6226_HASH_){
+        return this._["extend"](o,p1__6226_HASH_);
       }.bind(this)), objs);return o;
     
     }.bind(this))();
@@ -337,8 +337,8 @@ var html = html || {};
   
   this.parse_body = (function(args){
     return (function(){var out = (function(){if((this.nth(args, 1) instanceof jQuery)){return this.drop(1, args);} else if(this.object_QM_(this.nth(args, 1))){return this.drop(2, args);} else {return this.drop(1, args);}}.bind(this))();;
-    out = this.filter(this._.identity, out);out = this.filter((function(p1__5580_HASH_){
-      return (!(undefined == p1__5580_HASH_));
+    out = this.filter(this._.identity, out);out = this.filter((function(p1__8255_HASH_){
+      return (!(undefined == p1__8255_HASH_));
     }.bind(this)), out);return out;}.bind(this))();
   }.bind(this));
   

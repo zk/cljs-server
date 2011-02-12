@@ -1,4 +1,4 @@
-(ns cljs-server
+(ns cljs-server.deploy
   (:use [org.jclouds.compute]
         [clj-ssh.ssh]
         [clojure.java.shell])
@@ -20,7 +20,7 @@
 (def amazon-key (string/trim (slurp "/Users/zkim/.amazon-key")))
 (def amazon-secret (string/trim (slurp "/Users/zkim/.amazon-secret")))
 
-(def node-name "cljs-server-node")
+(def node-name "cljsserver")
 
 (defn compute [] (compute-service "ec2" amazon-key amazon-secret :ssh))
 
@@ -169,7 +169,7 @@
 
 (defn start-nodes [t c]
   (with-compute-service [(compute)]
-    (time (run-nodes t c (nodes)))
+    (time (run-nodes t c (cljs-server-node)))
     (println "Bootstrapping")
     (doseq [n (filter running? (nodes-with-tag t))]
       (bootstrap-node n))
@@ -204,8 +204,6 @@
       (println "Can't provision more than 3 nodes")
       (provision-nodes tag count))))
 
-#_(provision 0)
-
 (defn push-local-mongo [req]
   (sh "rm" "-rf" "/tmp/beeronsale*")
   (sh "mongodump" "--db" "beeronsale" "-o" "/tmp")
@@ -238,19 +236,3 @@
 
 (defn help [])
 
-(list-nodes node-name)
-(comment (undeftask provision)
-         (deftask provision
-           (let [tag (first (:provision *opts*))
-                 count (Integer. (second (:provision *opts*)))]
-             (if (> count 3)
-               (println "Can't provision more than 3 nodes")
-               (provision-nodes tag count))))
-
-         #_(use 'clojure.contrib.pprint)
-         #_(pprint (time (deploy-beeronsale {:node n})))
-
-
-         (undeftask deploy)
-         (deftask deploy
-           (deploy-beeronsale)))
