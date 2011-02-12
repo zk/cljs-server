@@ -337,8 +337,8 @@ var html = html || {};
   
   this.parse_body = (function(args){
     return (function(){var out = (function(){if((this.nth(args, 1) instanceof jQuery)){return this.drop(1, args);} else if(this.object_QM_(this.nth(args, 1))){return this.drop(2, args);} else {return this.drop(1, args);}}.bind(this))();;
-    out = this.filter(this._.identity, out);out = this.filter((function(p1__8255_HASH_){
-      return (!(undefined == p1__8255_HASH_));
+    out = this.filter(this._.identity, out);out = this.filter((function(p1__8292_HASH_){
+      return (!(undefined == p1__8292_HASH_));
     }.bind(this)), out);return out;}.bind(this))();
   }.bind(this));
   

@@ -60,9 +60,9 @@
                                                  [:li
                                                   (seed-link "html5 canvas" examples/canvas)]
                                                  [:li
-                                                  (seed-link "jquery dom" examples/dom)]]
-                                                [:li
-                                                 (seed-link "templating" examples/tpl)]]])
+                                                  (seed-link "jquery dom" examples/dom)]
+                                                 [:li
+                                                  (seed-link "templating" examples/tpl)]]]])
                                        {:backgroundColor "#eee"
                                         :borderRight "solid black 1px"
                                         :zIndex 5000})

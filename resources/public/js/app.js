@@ -337,8 +337,8 @@ var html = html || {};
   
   this.parse_body = (function(args){
     return (function(){var out = (function(){if((this.nth(args, 1) instanceof jQuery)){return this.drop(1, args);} else if(this.object_QM_(this.nth(args, 1))){return this.drop(2, args);} else {return this.drop(1, args);}}.bind(this))();;
-    out = this.filter(this._.identity, out);out = this.filter((function(p1__8249_HASH_){
-      return (!(undefined == p1__8249_HASH_));
+    out = this.filter(this._.identity, out);out = this.filter((function(p1__8286_HASH_){
+      return (!(undefined == p1__8286_HASH_));
     }.bind(this)), out);return out;}.bind(this))();
   }.bind(this));
   
@@ -426,8 +426,8 @@ var widgets = widgets || {};
             'display':"none"
           }))}.bind(this))();
         }.bind(this)),
-        'click':(function(p1__8250_HASH_){
-          return link["click"](p1__8250_HASH_);
+        'click':(function(p1__8287_HASH_){
+          return link["click"](p1__8287_HASH_);
         }.bind(this))
       });
     
@@ -447,8 +447,8 @@ var widgets = widgets || {};
           ({
             'class':"tabs"
           }),
-          this.map((function(p1__8251_HASH_){
-            return (p1__8251_HASH_['title']);
+          this.map((function(p1__8288_HASH_){
+            return (p1__8288_HASH_['title']);
           }.bind(this)), tabs),
           [
             "div",
@@ -468,23 +468,23 @@ var widgets = widgets || {};
           ({
             'class':"tab-content"
           }),
-          this.map((function(p1__8252_HASH_){
-            return (p1__8252_HASH_['content']);
+          this.map((function(p1__8289_HASH_){
+            return (p1__8289_HASH_['content']);
           }.bind(this)), tabs)
         ]
       ]);
       
       (function() {
-        var G__8254 = tabs;
-        for(var i=0; i < G__8254.length; i++) {
+        var G__8291 = tabs;
+        for(var i=0; i < G__8291.length; i++) {
           (function(t){t["click"]((function(){
-            this.map((function(p1__8253_HASH_){
-              return p1__8253_HASH_["blur"]();
+            this.map((function(p1__8290_HASH_){
+              return p1__8290_HASH_["blur"]();
             }.bind(this)), tabs);
             t["focus"]();
             return false;
           }.bind(this)));
-          t["blur"]()}.bind(this))(G__8254[i]);
+          t["blur"]()}.bind(this))(G__8291[i]);
         }
       }.bind(this))();this.first(tabs)["focus"]();return el;
     
@@ -1026,11 +1026,11 @@ var app = app || {};
                 [
                   "li",
                   this.seed_link("jquery dom", this.examples.dom)
+                ],
+                [
+                  "li",
+                  this.seed_link("templating", this.examples.tpl)
                 ]
-              ],
-              [
-                "li",
-                this.seed_link("templating", this.examples.tpl)
               ]
             ]
           ])["css"](({
