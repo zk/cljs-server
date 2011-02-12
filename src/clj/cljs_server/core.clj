@@ -70,7 +70,6 @@
                     (render :text (html [:h3 (.getMessage e)])))))))
 
 
-(mongo/mongo! :db "ojebook")
 
 (def sessions (atom {}))
 
@@ -88,3 +87,5 @@
       (wrap-file-info)
       (wrap-stacktrace)))
 
+(defn start-server [port]
+  (start (var entry-handler) port))

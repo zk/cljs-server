@@ -1,0 +1,2 @@
+#!/bin/sh
+/home/ec2-user/lein run > /home/ec2-user/cljs-server.log &
