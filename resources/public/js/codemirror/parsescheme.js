@@ -424,5 +424,7 @@ var SchemeParser = Editor.Parser = (function() {
 	};
 	return iter;
     };
-    return { make: startParse };
+    return { 
+      make: startParse
+    };
 })();

@@ -160,12 +160,15 @@
       (install-mongo)
       (deploy-cljs-server)))
 
-#_(deploy-beeronsale {:node (last (nodes))
-       :post (fn [res]
-               (if (= 0 (:code res))
-                 (println "OK    .. " (:cmd res))
-                 (do (println "ERROR .. " (:cmd res))
-                     (println "\t" (:out res)))))})
+#_(with-compute-service [(compute)]
+  (deploy-cljs-server {:node (last (nodes))
+                       :post (fn [res]
+                               (if (= 0 (:code res))
+                                 (println "OK    .. " (:cmd res))
+                                 (do (println "ERROR .. " (:cmd res))
+                                     (println "\t" (:out res)))))}))
+
+#_(list-nodes)
 
 (defn start-nodes [t c]
   (with-compute-service [(compute)]

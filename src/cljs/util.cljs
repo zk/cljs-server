@@ -7,13 +7,18 @@
 (defn array? [el]
   (and el (= el.constructor Array)))
 
+(defn has-el? [o]
+  (when o
+    (aget o :el)))
+
 (defn append [p c]
-  (if (array? c)
-    (map (fn [c] (append p c)) c)
-    (do
-      (.append p c)
-      (when (instanceof c 'jQuery)
-        (.trigger c "postinsert"))))
+  (cond
+   (array? c) (map (fn [c] (append p c)) c)
+   (has-el? c) (append p (:el c))
+   :else (do
+           (.append p c)
+           (when (instanceof c 'jQuery)
+             (.trigger c "postinsert"))))
   p)
 
 (defn ready [f]

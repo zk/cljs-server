@@ -289,22 +289,26 @@ var util = util || {};
     return (el && (el.constructor == this.Array));
   }.bind(this));
   
-  this.append = (function(p, c){
-    (function(){
-      if(this.array_QM_(c)){
-       return this.map((function(c){
-        return this.append(p, c);
-      }.bind(this)), c);
-      } else {
-       return (function(){p["append"](c);return (function(){
-        
-        if(!(c instanceof jQuery)) return null;
-        
-        return c["trigger"]("postinsert");
+  this.has_el_QM_ = (function(o){
+    return (function(){
       
-      }.bind(this))()}.bind(this))();
-      }
+      if(!o) return null;
+      
+      return (o["el"]);
+    
     }.bind(this))();
+  }.bind(this));
+  
+  this.append = (function(p, c){
+    (function(){if(this.array_QM_(c)){return this.map((function(c){
+      return this.append(p, c);
+    }.bind(this)), c);} else if(this.has_el_QM_(c)){return this.append(p, (c['el']));} else {return (function(){p["append"](c);return (function(){
+      
+      if(!(c instanceof jQuery)) return null;
+      
+      return c["trigger"]("postinsert");
+    
+    }.bind(this))()}.bind(this))();}}.bind(this))();;
     return p;
   }.bind(this));
   
@@ -337,8 +341,8 @@ var html = html || {};
   
   this.parse_body = (function(args){
     return (function(){var out = (function(){if((this.nth(args, 1) instanceof jQuery)){return this.drop(1, args);} else if(this.object_QM_(this.nth(args, 1))){return this.drop(2, args);} else {return this.drop(1, args);}}.bind(this))();;
-    out = this.filter(this._.identity, out);out = this.filter((function(p1__8286_HASH_){
-      return (!(undefined == p1__8286_HASH_));
+    out = this.filter(this._.identity, out);out = this.filter((function(p1__17206_HASH_){
+      return (!(undefined == p1__17206_HASH_));
     }.bind(this)), out);return out;}.bind(this))();
   }.bind(this));
   
@@ -399,10 +403,6 @@ var widgets = widgets || {};
   
   this._ = _;
   
-  this.defaults = ({
-    
-  });;
-  
   this.tab = (function(title, content){
     return (function(){
       var link = this.$html([
@@ -426,8 +426,8 @@ var widgets = widgets || {};
             'display':"none"
           }))}.bind(this))();
         }.bind(this)),
-        'click':(function(p1__8287_HASH_){
-          return link["click"](p1__8287_HASH_);
+        'click':(function(p1__17207_HASH_){
+          return link["click"](p1__17207_HASH_);
         }.bind(this))
       });
     
@@ -447,8 +447,8 @@ var widgets = widgets || {};
           ({
             'class':"tabs"
           }),
-          this.map((function(p1__8288_HASH_){
-            return (p1__8288_HASH_['title']);
+          this.map((function(p1__17208_HASH_){
+            return (p1__17208_HASH_['title']);
           }.bind(this)), tabs),
           [
             "div",
@@ -468,23 +468,23 @@ var widgets = widgets || {};
           ({
             'class':"tab-content"
           }),
-          this.map((function(p1__8289_HASH_){
-            return (p1__8289_HASH_['content']);
+          this.map((function(p1__17209_HASH_){
+            return (p1__17209_HASH_['content']);
           }.bind(this)), tabs)
         ]
       ]);
       
       (function() {
-        var G__8291 = tabs;
-        for(var i=0; i < G__8291.length; i++) {
+        var G__17211 = tabs;
+        for(var i=0; i < G__17211.length; i++) {
           (function(t){t["click"]((function(){
-            this.map((function(p1__8290_HASH_){
-              return p1__8290_HASH_["blur"]();
+            this.map((function(p1__17210_HASH_){
+              return p1__17210_HASH_["blur"]();
             }.bind(this)), tabs);
             t["focus"]();
             return false;
           }.bind(this)));
-          t["blur"]()}.bind(this))(G__8291[i]);
+          t["blur"]()}.bind(this))(G__17211[i]);
         }
       }.bind(this))();this.first(tabs)["focus"]();return el;
     
@@ -500,13 +500,28 @@ var widgets = widgets || {};
     ]);
   }.bind(this));
   
-  this.h_splitter = (function(){
-    return this.$html([
-      "div",
-      ({
-        'class':"h-splitter"
-      })
-    ]);
+  this.jquery_QM_ = (function(o){
+    return (o instanceof jQuery);
+  }.bind(this));
+  
+  this.has_layout_QM_ = (function(o){
+    return (function(){
+      
+      if(!o) return null;
+      
+      return (o["layout"]);
+    
+    }.bind(this))();
+  }.bind(this));
+  
+  this.has_el_QM_ = (function(o){
+    return (function(){
+      
+      if(!o) return null;
+      
+      return (o["el"]);
+    
+    }.bind(this))();
   }.bind(this));
   
   this.percent_QM_ = (function(s){
@@ -524,21 +539,31 @@ var widgets = widgets || {};
     }).call(this, out, 100);return out;}.bind(this))();
   }.bind(this));
   
+  this.css = (function(el, opts){
+    return el["css"](opts);
+  }.bind(this));
+  
   this.size_h_split_pane = (function(container, left_el, right_el, opts){
     return (function(){
       var w = container["width"](),
       h = container["height"](),
-      split_pos = ((opts['splitter'])['pos']),
-      split_width = ((opts['splitter'])['size']),
+      split_pos = (((opts['splitter'])['pos']) || 200),
+      split_width = (((opts['splitter'])['size']) || (function(){
+        if(((opts['splitter'])['dynamic'])){
+         return 10;
+        } else {
+         return 0;
+        }
+      }.bind(this))()),
       left_width = (function(){if(this.percent_QM_(split_pos)){return (function() {
         var out = arguments[0];
         for(var __i=1; __i<arguments.length; __i++) {
           out = out * arguments[__i];
         }
         return out;
-      }).call(this, w, this.parse_percent(split_pos));} else {return (((opts['splitter'])['pos']) || 200);}}.bind(this))();;
+      }).call(this, w, this.parse_percent(split_pos));} else {return split_pos;}}.bind(this))();;
       
-      left_el["css"](({
+      this.css(left_el, ({
         'height':h,
         'width':(function() {
           var out = arguments[0];
@@ -547,7 +572,7 @@ var widgets = widgets || {};
           }
           return out;
         }).call(this, left_width, split_width)
-      }));return right_el["css"](({
+      }));return this.css(right_el, ({
         'height':h,
         'width':(function() {
           var out = arguments[0];
@@ -569,8 +594,16 @@ var widgets = widgets || {};
           'class':"v-splitter"
         })
       ])["css"](({
-        'width':((opts['size']) || 10),
+        'width':(((opts['splitter'])['size']) || (function(){
+          if(((opts['splitter'])['dynamic'])){
+           return 10;
+          } else {
+           return 0;
+          }
+        }.bind(this))()),
         'height':container["height"](),
+        'padding':0,
+        'margin':0,
         'float':"left"
       })),
       dragging = false,
@@ -588,43 +621,64 @@ var widgets = widgets || {};
         'left':0
       }));
       
-      el["mousedown"]((function(e){
-        (dragging = true);
-        (last_x = e.clientX);
-        return body["append"](shim);
-      }.bind(this)));this.$("body")["mousemove"]((function(e){
-        return (function(){
-          if(dragging){
-           return (function(){
-            var delta = (function() {
-              var out = arguments[0];
-              for(var __i=1; __i<arguments.length; __i++) {
-                out = out - arguments[__i];
-              }
-              return out;
-            }).call(this, e.clientX, last_x);
+      (function(){
+        
+        if(!((opts['splitter'])['dynamic'])) return null;
+        
+        el["css"]("cursor","col-resize");
+        el["mousedown"]((function(e){
+          (dragging = true);
+          (last_x = e.clientX);
+          return body["append"](shim);
+        }.bind(this)));
+        this.$("body")["mousemove"]((function(e){
+          return (function(){
+            if(dragging){
+             return (function(){
+              var delta = (function() {
+                var out = arguments[0];
+                for(var __i=1; __i<arguments.length; __i++) {
+                  out = out - arguments[__i];
+                }
+                return out;
+              }).call(this, e.clientX, last_x);
+              
+              (last_x = e.clientX);left_el["width"]((function() {
+                var out = arguments[0];
+                for(var __i=1; __i<arguments.length; __i++) {
+                  out = out + arguments[__i];
+                }
+                return out;
+              }).call(this, left_el["width"](), delta));right_el["width"]((function() {
+                var out = arguments[0];
+                for(var __i=1; __i<arguments.length; __i++) {
+                  out = out - arguments[__i];
+                }
+                return out;
+              }).call(this, right_el["width"](), delta));(function(){
+                
+                if(!this.has_layout_QM_((opts['left']))) return null;
+                
+                return (opts['left'])["layout"]();
+              
+              }.bind(this))();return (function(){
+                
+                if(!this.has_layout_QM_((opts['right']))) return null;
+                
+                return (opts['right'])["layout"]();
+              
+              }.bind(this))();
             
-            (last_x = e.clientX);left_el["width"]((function() {
-              var out = arguments[0];
-              for(var __i=1; __i<arguments.length; __i++) {
-                out = out + arguments[__i];
-              }
-              return out;
-            }).call(this, left_el["width"](), delta));return right_el["width"]((function() {
-              var out = arguments[0];
-              for(var __i=1; __i<arguments.length; __i++) {
-                out = out - arguments[__i];
-              }
-              return out;
-            }).call(this, right_el["width"](), delta));
-          
+            }.bind(this))();
+            }
           }.bind(this))();
-          }
-        }.bind(this))();
-      }.bind(this)));this.$("body")["mouseup"]((function(){
-        (dragging = false);
-        return shim["remove"]();
-      }.bind(this)));return el;
+        }.bind(this)));
+        return this.$("body")["mouseup"]((function(){
+          (dragging = false);
+          return shim["remove"]();
+        }.bind(this)));
+      
+      }.bind(this))();return el;
     
     }.bind(this))();
   }.bind(this));
@@ -639,6 +693,20 @@ var widgets = widgets || {};
       opts = this.merge(({
         'splitter':split_opts
       }), o),
+      left_el = (function(){
+        if(this.has_el_QM_((opts['left']))){
+         return ((opts['left'])['el']);
+        } else {
+         return (opts['left']);
+        }
+      }.bind(this))(),
+      right_el = (function(){
+        if(this.has_el_QM_((opts['right']))){
+         return ((opts['right'])['el']);
+        } else {
+         return (opts['right']);
+        }
+      }.bind(this))(),
       container = (function(){var out = this.$html([
         "div",
         ({
@@ -650,64 +718,52 @@ var widgets = widgets || {};
         'height':"100%"
       }));
       return out}.bind(this)()),
-      left_el = this.$html([
+      left_pane = this.$html([
         "div",
         ({
           'class':"left-pane",
-          'style':"float: left; width: 100%; height: 100%;"
+          'style':"float: left;  margin: 0px; padding: 0px; position: relative;"
         }),
-        (opts['left'])["css"](({
-          'width':"100%",
-          'height':"100%"
-        }))
+        left_el
       ]),
-      right_el = this.$html([
+      right_pane = this.$html([
         "div",
         ({
           'class':"right-pane",
-          'style':"float: left;"
+          'style':"float: left; margin: 0px; padding: 0px; position: relative"
         }),
-        (opts['right'])["css"](({
-          'width':"100%",
-          'height':"100%"
-        }))
+        right_el
       ]),
-      splitter = this.v_splitter(container, left_el, right_el, (opts['splitter']));
+      splitter = this.v_splitter(container, left_pane, right_pane, opts);
       
-      this.util.append(container, left_el);(function(){
-        
-        if(!((opts['splitter'])['dynamic'])) return null;
-        
-        return this.util.append(container, splitter);
-      
-      }.bind(this))();this.util.append(container, right_el);this.util.append(container, this.$html([
+      this.util.append(container, left_pane);this.util.append(container, splitter);this.util.append(container, right_pane);this.util.append(container, this.$html([
         "div",
         ({
           'style':"clear: both"
         })
-      ]));this.$(window)["resize"]((function(){
-        return this.size_h_split_pane(container, left_el, right_el, opts);
-      }.bind(this)));this.$(window)["resize"]((function(){
-        return splitter["height"](container["height"]());
-      }.bind(this)));this.on_insert(container, (function(){
-        return splitter["height"](container["height"]());
-      }.bind(this)));this.on_insert(container, (function(){
-        return this.size_h_split_pane(container, left_el, right_el, opts);
-      }.bind(this)));return container;
+      ]));return ({
+        'el':container,
+        'layout':(function(){
+          splitter["height"](container["height"]());
+          this.size_h_split_pane(container, left_pane, right_pane, opts);
+          (function(){
+            
+            if(!this.has_layout_QM_((opts['left']))) return null;
+            
+            return (opts['left'])["layout"]();
+          
+          }.bind(this))();
+          return (function(){
+            
+            if(!this.has_layout_QM_((opts['right']))) return null;
+            
+            return (opts['right'])["layout"]();
+          
+          }.bind(this))();
+        }.bind(this))
+      });
     
     }.bind(this))();
-  }.bind(this));
-  
-  this.on_insert = (function(el, f){
-    return el["bind"]("DOMNodeInserted",(function(){
-      return (function(){
-        
-        if(!(el["parents"]("body")[0])) return null;
-        
-        return f();
-      
-      }.bind(this))();
-    }.bind(this)));
   }.bind(this));
   
   this.size_v_split_pane = (function(container, top_el, bottom_el, opts){
@@ -718,20 +774,19 @@ var widgets = widgets || {};
       return (function(){
         var w = container["outerWidth"](),
         h = container["outerHeight"](),
-        top_height = ((function() {
-          var out = arguments[0];
-          for(var __i=1; __i<arguments.length; __i++) {
-            out = out + arguments[__i];
+        splitter_size = (function(){
+          if((opts['dynamic'])){
+           return (opts['size']);
           }
-          return out;
-        }).call(this, top_el["height"]()) || 200),
+        }.bind(this))(),
+        top_height = (opts['pos']),
         bottom_height = (function() {
           var out = arguments[0];
           for(var __i=1; __i<arguments.length; __i++) {
             out = out - arguments[__i];
           }
           return out;
-        }).call(this, h, top_height, (opts['splitter-height']));
+        }).call(this, h, top_height);
         
         top_el["css"](({
           'height':top_height
@@ -744,6 +799,20 @@ var widgets = widgets || {};
     }.bind(this))();
   }.bind(this));
   
+  this.mk_shim = (function(body){
+    return this.css(this.$html([
+      "div"
+    ]), ({
+      'zIndex':9999,
+      'width':body["width"](),
+      'height':body["height"](),
+      'backgroundColor':"transparent",
+      'position':"fixed",
+      'top':0,
+      'left':0
+    }));
+  }.bind(this));
+  
   this.h_splitter = (function(container, top_el, bottom_el, opts){
     return (function(){
       var el = this.$html([
@@ -751,29 +820,17 @@ var widgets = widgets || {};
         ({
           'class':"h-splitter"
         })
-      ])["css"](({
-        'height':((opts['splitter-height']) || 10)
-      })),
+      ]),
       dragging = false,
       last_y = 0,
       body = this.$("body"),
-      shim = this.$html([
-        "div"
-      ])["css"](({
-        'zIndex':9999,
-        'width':body["width"](),
-        'height':body["height"](),
-        'backgroundColor':"transparent",
-        'position':"fixed",
-        'top':0,
-        'left':0
-      }));
+      shim = this.mk_shim(body);
       
       el["mousedown"]((function(e){
         (dragging = true);
         (last_y = e.clientY);
         return body["append"](shim);
-      }.bind(this)));this.$("body")["mousemove"]((function(e){
+      }.bind(this)));body["mousemove"]((function(e){
         return (function(){
           if(dragging){
            return (function(){
@@ -802,7 +859,7 @@ var widgets = widgets || {};
           }.bind(this))();
           }
         }.bind(this))();
-      }.bind(this)));this.$("body")["mouseup"]((function(){
+      }.bind(this)));body["mouseup"]((function(){
         (dragging = false);
         return shim["remove"]();
       }.bind(this)));return el;
@@ -810,18 +867,16 @@ var widgets = widgets || {};
     }.bind(this))();
   }.bind(this));
   
-  return this.v_split_pane = (function(top, bottom, o){
+  return this.v_split_pane = (function(o){
     return (function(){
-      var opts = (function(){
-        if(o){
-         return o;
-        } else {
-         return ({
-          'splitter':false,
-          'splitter-height':0
-        });
-        }
-      }.bind(this))(),
+      var split_opts = this.merge(({
+        'pos':300,
+        'size':10,
+        'dynamic':false
+      }), (o['splitter'])),
+      opts = this.merge(o, ({
+        'splitter':split_opts
+      })),
       container = (function(){var out = this.$html([
         "div",
         ({
@@ -833,30 +888,63 @@ var widgets = widgets || {};
         'height':"100%"
       }));
       return out}.bind(this)()),
-      top_el = this.$html([
-        "div",
-        ({
-          'class':"top-pane"
-        }),
-        (top['el'])
-      ]),
-      bottom_el = this.$html([
-        "div",
-        ({
-          'class':"bottom-pane"
-        }),
-        (bottom['el'])
-      ]);
-      
-      this.util.append(container, top_el);(function(){
-        if((opts['splitter'])){
-         return this.util.append(container, this.h_splitter(container, top_el, bottom_el, opts));
+      top_el = (function(){
+        if(this.has_el_QM_((opts['top']))){
+         return ((opts['top'])['el']);
+        } else {
+         return (opts['top']);
         }
-      }.bind(this))();this.util.append(container, bottom_el);container["resize"]((function(){
-        return this.size_v_split_pane(container, top_el, bottom_el, opts);
-      }.bind(this)));this.on_insert(container, (function(){
-        return this.size_v_split_pane(container, top_el, bottom_el, opts);
-      }.bind(this)));return container;
+      }.bind(this))(),
+      bottom_el = (function(){
+        if(this.has_el_QM_((opts['bottom']))){
+         return ((opts['bottom'])['el']);
+        } else {
+         return (opts['bottom']);
+        }
+      }.bind(this))(),
+      top_pane = this.$html([
+        "div",
+        ({
+          'class':"top-pane",
+          'style':"position: relative;"
+        }),
+        top_el
+      ]),
+      bottom_pane = this.$html([
+        "div",
+        ({
+          'class':"bottom-pane",
+          'style':"position: relative"
+        }),
+        bottom_el
+      ]),
+      splitter = this.h_splitter(container, top_pane, bottom_pane, split_opts);
+      
+      this.util.append(container, top_pane);(function(){
+        if(((opts['splitter'])['dynamic'])){
+         return this.util.append(container, splitter);
+        }
+      }.bind(this))();this.util.append(container, bottom_pane);return ({
+        'el':container,
+        'layout':(function(){
+          splitter["width"](container["width"]());
+          this.size_v_split_pane(container, top_pane, bottom_pane, split_opts);
+          (function(){
+            
+            if(!this.has_layout_QM_((opts['top']))) return null;
+            
+            return (opts['top'])["layout"]();
+          
+          }.bind(this))();
+          return (function(){
+            
+            if(!this.has_layout_QM_((opts['bottom']))) return null;
+            
+            return (opts['bottom'])["layout"]();
+          
+          }.bind(this))();
+        }.bind(this))
+      });
     
     }.bind(this))();
   }.bind(this))
@@ -939,6 +1027,8 @@ var app = app || {};
   
   this.cljs_editor = null;;
   
+  this.js_output = null;;
+  
   this.seed_link = (function(link_text, code){
     return (function(){var out = this.$html([
       "a",
@@ -954,153 +1044,280 @@ var app = app || {};
     return out}.bind(this)());
   }.bind(this));
   
-  return this.ready((function(){
+  this.bstuff = (function(color, content){
+    return this.$html([
+      "div",
+      ({
+        'style':this.str("background-color: ", color)
+      }),
+      content
+    ])["css"](({
+      'position':"absolute",
+      'top':0,
+      'bottom':0,
+      'left':0,
+      'right':0,
+      'padding':"20px",
+      'border':"solid black 1px"
+    }));
+  }.bind(this));
+  
+  this.main_split = (function(){
+    return ;
+  }.bind(this));
+  
+  this.sidebar = (function(){
+    return this.$html([
+      "div",
+      ({
+        'class':"left-bar"
+      }),
+      [
+        "div",
+        ({
+          'class':"left-content"
+        }),
+        [
+          "p",
+          "CljsPad is an live console for the experimental ",
+          [
+            "a",
+            ({
+              'href':"http://clojure.org"
+            }),
+            "clojure"
+          ],
+          "(ish)-to-javscript compiler, ",
+          [
+            "a",
+            ({
+              'href':"http://github.com/zkim/cljs"
+            }),
+            "cljs"
+          ],
+          "."
+        ],
+        [
+          "br"
+        ],
+        [
+          "p",
+          [
+            "b",
+            "Place your cursor in the left pane, hit ctrl+s"
+          ],
+          ", and the cljs code will be transformed into javscript (top-right panel), executed, and the result displayed in the bottom-right panel."
+        ],
+        [
+          "br"
+        ],
+        [
+          "h4",
+          "Examples"
+        ],
+        [
+          "ul",
+          [
+            "li",
+            this.seed_link("empty", this.examples.empty)
+          ],
+          [
+            "li",
+            this.seed_link("html5 canvas", this.examples.canvas)
+          ],
+          [
+            "li",
+            this.seed_link("jquery dom", this.examples.dom)
+          ],
+          [
+            "li",
+            this.seed_link("templating", this.examples.tpl)
+          ]
+        ]
+      ]
+    ])["css"](({
+      'backgroundColor':"#eee",
+      'borderRight':"solid black 1px",
+      'height':"100%",
+      'zIndex':5000
+    }));
+  }.bind(this));
+  
+  this.sidebar_split = (function(){
+    return this.wd.h_split_pane(({
+      'left':this.sidebar(),
+      'right':this.wd.h_split_pane(({
+        'left':this.$html([
+          "div",
+          ({
+            'class':"cljs-editor-wrapper"
+          }),
+          [
+            "textarea",
+            ({
+              'id':"cljs-editor",
+              'style':""
+            })
+          ]
+        ]),
+        'right':this.wd.v_split_pane(({
+          'top':this.$html([
+            "div",
+            ({
+              'class':"compiled-cljs-output"
+            }),
+            [
+              "textarea",
+              ({
+                'id':"js-editor"
+              })
+            ]
+          ]),
+          'bottom':this.$html([
+            "iframe",
+            ({
+              'id':"render-iframe",
+              'name':"render-iframe",
+              'src':"/render"
+            })
+          ])["css"](({
+            'height':"100%",
+            'width':"100%"
+          })),
+          'splitter':({
+            'pos':300,
+            'dynamic':true
+          })
+        })),
+        'splitter':({
+          'pos':"50%",
+          'size':10,
+          'dynamic':true
+        })
+      })),
+      'splitter':({
+        'pos':200,
+        'size':0,
+        'dynamic':false
+      })
+    }));
+  }.bind(this));
+  
+  this.save = (function(){
+    return this.ajax(({
+      'url':"/save",
+      'type':"POST",
+      'data':({
+        'cljs-code':this.cljs_editor["getCode"](),
+        'id':CODE_ID
+      }),
+      'dataType':"json",
+      'success':(function(resp){
+        this.println(resp);
+        return (function(){
+          if(resp.success){
+           return (location.href = this.str("/c/", resp.id));
+          }
+        }.bind(this))();
+      }.bind(this))
+    }));
+  }.bind(this));
+  
+  this.main_layout = (function(header, content){
+    return this.wd.v_split_pane(({
+      'top':header,
+      'bottom':content,
+      'splitter':({
+        'pos':39
+      })
+    }));
+  }.bind(this));
+  
+  this.new_button = (function(){
+    return (function(){var out = this.$html([
+      "button",
+      ({
+        'class':"myButton"
+      }),
+      "new"
+    ]);
+    out["click"]((function(){
+      return (location.href = "/");
+    }.bind(this)));
+    return out}.bind(this)());
+  }.bind(this));
+  
+  this.save_button = (function(){
     return (function(){
-      var header = this.$html([
-        "header",
+      var el = this.$html([
+        "button",
+        ({
+          'class':"myButton"
+        }),
+        (function(){
+          if(CODE){
+           return "update";
+          } else {
+           return "save";
+          }
+        }.bind(this))()
+      ]);
+      
+      return el["click"]((function(){
+        return this.save();
+      }.bind(this)));
+    
+    }.bind(this))();
+  }.bind(this));
+  
+  this.run_button = (function(){
+    return (function(){
+      var el = this.$html([
+        "button",
+        ({
+          'class':"myButton"
+        }),
+        "run"
+      ]);
+      
+      return el["click"]((function(){
+        return this.on_save(this.cljs_editor, this.js_output);
+      }.bind(this)));
+    
+    }.bind(this))();
+  }.bind(this));
+  
+  this.header = (function(){
+    return this.$html([
+      "header",
+      [
+        "a",
+        ({
+          'href':"/"
+        }),
         [
           "h1",
           "CljsPad"
         ]
-      ]),
-      content = this.$html([
+      ],
+      [
         "div",
         ({
-          'style':"height: 100%;"
+          'class':"buttons"
         }),
-        this.wd.h_split_pane(({
-          'left':this.$html([
-            "div",
-            ({
-              'class':"left-bar"
-            }),
-            [
-              "div",
-              ({
-                'class':"left-content"
-              }),
-              [
-                "p",
-                "CljsPad is an live console for the experimental ",
-                [
-                  "a",
-                  ({
-                    'href':"http://clojure.org"
-                  }),
-                  "clojure"
-                ],
-                "(ish)-to-javscript compiler, ",
-                [
-                  "a",
-                  ({
-                    'href':"http://github.com/zkim/cljs"
-                  }),
-                  "cljs"
-                ],
-                "."
-              ],
-              [
-                "br"
-              ],
-              [
-                "p",
-                "Place your cursor in the left pane, hit ctrl+s, and the cljs code will be transformed into javscript (top-right panel), executed, and the result displayed in the bottom-right panel."
-              ],
-              [
-                "br"
-              ],
-              [
-                "h4",
-                "Examples"
-              ],
-              [
-                "ul",
-                [
-                  "li",
-                  this.seed_link("empty", this.examples.empty)
-                ],
-                [
-                  "li",
-                  this.seed_link("html5 canvas", this.examples.canvas)
-                ],
-                [
-                  "li",
-                  this.seed_link("jquery dom", this.examples.dom)
-                ],
-                [
-                  "li",
-                  this.seed_link("templating", this.examples.tpl)
-                ]
-              ]
-            ]
-          ])["css"](({
-            'backgroundColor':"#eee",
-            'borderRight':"solid black 1px",
-            'zIndex':5000
-          })),
-          'right':this.wd.h_split_pane(({
-            'left':this.$html([
-              "div",
-              ({
-                'class':"cljs-editor-wrapper"
-              }),
-              [
-                "textarea",
-                ({
-                  'id':"cljs-editor",
-                  'style':""
-                })
-              ]
-            ]),
-            'right':this.wd.v_split_pane(({
-              'el':this.$html([
-                "div",
-                ({
-                  'class':"compiled-cljs-output"
-                }),
-                [
-                  "textarea",
-                  ({
-                    'id':"js-editor",
-                    'style':""
-                  })
-                ]
-              ]),
-              'height':400
-            }), ({
-              'el':this.$html([
-                "iframe",
-                ({
-                  'id':"render-iframe",
-                  'name':"render-iframe",
-                  'src':"/render",
-                  'style':"height: 99.9%; width: 99.9%; margin: 0px; padding: 0px;"
-                })
-              ])
-            }), ({
-              'splitter':true,
-              'splitter-height':10
-            })),
-            'splitter':({
-              'pos':"50%",
-              'size':10,
-              'dynamic':true
-            })
-          })),
-          'splitter':({
-            'pos':200,
-            'size':5,
-            'dynamic':false
-          })
-        }))
-      ]);
+        this.new_button(),
+        this.run_button(),
+        this.save_button()
+      ]
+    ]);
+  }.bind(this));
+  
+  return this.ready((function(){
+    return (function(){
+      var main = this.main_layout(this.header(), this.sidebar_split());
       
-      this.util.append(this.$("body"), this.wd.v_split_pane(({
-        'el':header
-      }), ({
-        'el':content
-      })));return (function(){
-        var js_output = this.CodeMirror["fromTextArea"]("js-editor",({
+      this.util.append(this.$("body"), main);return (function(){
+        var js_out = this.CodeMirror["fromTextArea"]("js-editor",({
           'path':"/js/codemirror/",
           'height':"100%",
           'width':"100%",
@@ -1112,20 +1329,29 @@ var app = app || {};
         })),
         cljs_ed = this.CodeMirror["fromTextArea"]("cljs-editor",({
           'path':"/js/codemirror/",
-          'content':this.examples.canvas,
+          'content':(function(){
+            if(CODE){
+             return CODE;
+            } else {
+             return this.examples.empty;
+            }
+          }.bind(this))(),
           'height':"100%",
           'width':"100%",
+          'autoMatchParens':true,
           'parserfile':[
             "parsescheme.js",
             "tokenizescheme.js"
           ],
           'stylesheet':"/css/schemecolors.css",
           'saveFunction':(function(){
-            return this.on_save(cljs_ed, js_output);
+            return this.on_save(cljs_ed, js_out);
           }.bind(this))
         }));
         
-        return (this.cljs_editor = cljs_ed);
+        (this.cljs_editor = cljs_ed);(this.js_output = js_out);main["layout"]();return this.$(window)["resize"]((function(){
+          return main["layout"]();
+        }.bind(this)));
       
       }.bind(this))();
     

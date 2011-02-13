@@ -289,22 +289,26 @@ var util = util || {};
     return (el && (el.constructor == this.Array));
   }.bind(this));
   
-  this.append = (function(p, c){
-    (function(){
-      if(this.array_QM_(c)){
-       return this.map((function(c){
-        return this.append(p, c);
-      }.bind(this)), c);
-      } else {
-       return (function(){p["append"](c);return (function(){
-        
-        if(!(c instanceof jQuery)) return null;
-        
-        return c["trigger"]("postinsert");
+  this.has_el_QM_ = (function(o){
+    return (function(){
       
-      }.bind(this))()}.bind(this))();
-      }
+      if(!o) return null;
+      
+      return (o["el"]);
+    
     }.bind(this))();
+  }.bind(this));
+  
+  this.append = (function(p, c){
+    (function(){if(this.array_QM_(c)){return this.map((function(c){
+      return this.append(p, c);
+    }.bind(this)), c);} else if(this.has_el_QM_(c)){return this.append(p, (c['el']));} else {return (function(){p["append"](c);return (function(){
+      
+      if(!(c instanceof jQuery)) return null;
+      
+      return c["trigger"]("postinsert");
+    
+    }.bind(this))()}.bind(this))();}}.bind(this))();;
     return p;
   }.bind(this));
   
@@ -337,8 +341,8 @@ var html = html || {};
   
   this.parse_body = (function(args){
     return (function(){var out = (function(){if((this.nth(args, 1) instanceof jQuery)){return this.drop(1, args);} else if(this.object_QM_(this.nth(args, 1))){return this.drop(2, args);} else {return this.drop(1, args);}}.bind(this))();;
-    out = this.filter(this._.identity, out);out = this.filter((function(p1__8292_HASH_){
-      return (!(undefined == p1__8292_HASH_));
+    out = this.filter(this._.identity, out);out = this.filter((function(p1__17212_HASH_){
+      return (!(undefined == p1__17212_HASH_));
     }.bind(this)), out);return out;}.bind(this))();
   }.bind(this));
   
