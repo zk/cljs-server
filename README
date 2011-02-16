@@ -16,7 +16,7 @@ Setup's a bit convoluted right now:
 9. `lein deps && lein swank`
 10. Connect to swank
 11. repl=> `(use cljs.core2)`
-12. repl=> `(start-watch-project "./project.clj")`. This starts the cljs compiler, which recompiles cljs -> js on source changes in the `src/cljs` directory.
+12. repl=> `(start-watch-project "./project.clj")`. This starts the cljs compiler, which recompiles cljs -> js on changes in the `src/cljs` directory.
 13. repl=> `(use cljs-server.dev)`. This will start the server at port 8080.
 14. http://localhost:8080
 
