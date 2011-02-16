@@ -8,8 +8,8 @@ Setup's a bit convoluted right now:
 1. `mkdir cljs-stuff`
 2. `cd cljs-stuff`
 3. `git clone https://github.com/zkim/nsfw.git`
-4. `git clone https://zkim@github.com/zkim/cljs.git`
-5. `git clone https://zkim@github.com/zkim/cljs-server.git`
+4. `git clone https://github.com/zkim/cljs.git`
+5. `git clone https://github.com/zkim/cljs-server.git`
 6. `cd nsfw && lein install`
 7. `cd ../cljs && lein install`
 8. `cd ../cljs-server`
