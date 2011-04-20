@@ -107,9 +107,17 @@
                                     :code cljs-code})
                     (render :json {:success true :id id}))
                   (render :json {:success true :id (str (:_id (mongo/insert! :code {:_id (new-bson-id)
-                                                                                    :code cljs-code})))})
-                  )))
-   ["c" code-id] (index code-id)))
+                                                                                    :code
+                                                                                    cljs-code})))}) )))
+   ["c" code-id] (index code-id)
+   ["client" "compile"] (fn [req]
+                          (try
+                            (let [code (:code (json-decode (slurp (:body req))))]
+                              (render :json {:js (cljs/compile-cljs-string code)}))
+                            (catch Exception e
+                              (-> (response (.getMessage e))
+                                  (status 500)
+                                  (header "Content-Type" "text/html")))))))
 
 (mongo/mongo! :db :cljs-server)
 
@@ -117,8 +125,6 @@
 
 (def entry-handler
   (-> (var routes)
-      #_(wrap-user)
-      #_(wrap-bind-csrf)
       (wrap-keyword-params)
       (wrap-nested-params)
       (wrap-params)
