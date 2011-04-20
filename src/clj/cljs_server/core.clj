@@ -16,7 +16,7 @@
         [ring.util.response]
         [ring.middleware.session.memory])
   (:require [somnium.congomongo :as mongo]
-            [cljs.core2 :as cljs]
+            [cljs.core :as cljs]
             [org.danlarkin.json :as json]))
 
 ;; Middleware

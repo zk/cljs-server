@@ -1,5 +1,6 @@
 (ns html
-  (:require $ util))
+  (:require util)
+  (:import [jQuery :as $]))
 
 (defn parse-attrs [args]
   (cond

@@ -1,5 +1,5 @@
 (ns util
-  (:require $))
+  (:import [jQuery :as $]))
 
 (defn string? [o]
   (and o (= el.constructor String)))

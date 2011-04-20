@@ -22,11 +22,14 @@
 
 (def node-name "cljsserver")
 
-(defn compute [] (compute-service "ec2" amazon-key amazon-secret :ssh))
+(defn compute [] (compute-service "aws-ec2" amazon-key amazon-secret :ssh))
 
-(defn cljs-server-node [] (build-template (compute) {:image-id "us-east-1/ami-08728661" :min-ram 512
-                                           :authorize-public-key (slurp (str (. System getProperty "user.home") "/.ssh/id_rsa.pub"))
-                                           :inbound-ports [22 80 81 443 8080 8081]}))
+(defn cljs-server-node []
+  (build-template
+   (compute)
+   {:image-id "us-east-1/ami-08728661" :min-ram 512
+    :authorize-public-key (slurp (str (. System getProperty "user.home") "/.ssh/id_rsa.pub"))
+    :inbound-ports [22 80 81 443 8080 8081]}))
 
 (defn print-node [node]
   (println "\t" (tag node) " " (id node) " " (seq (public-ips node)) " " (seq (private-ips node)) " " (when (running? node) "RUNNING") ))

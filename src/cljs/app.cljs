@@ -1,9 +1,11 @@
 (ns app
   (:use util html)
   (:require [widgets :as wd]
-            CodeMirror
-            MirrorFrame
-            examples))
+            examples)
+  (:import CodeMirror
+           MirrorFrame))
+
+
 
 (defn control-panel []
   ($html [:div {:class "hello world"}
@@ -164,7 +166,7 @@
   ($html
    [:header
     [:a {:href "/"}
-     [:h1 "CljsPad"]]
+     [:h1 "CljsPad 0.2.1"]]
     [:div {:class "buttons"}
      (new-button)
      (run-button)

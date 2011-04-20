@@ -1,7 +1,8 @@
 (ns widgets
   (:use html)
-  (:require $
-            _))
+  (:import $
+           _))
+
 
 ;; Tab Panel
 
